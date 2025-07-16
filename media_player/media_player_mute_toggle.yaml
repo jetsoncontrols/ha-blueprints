@@ -11,6 +11,17 @@ blueprint:
           multiple: false
           filter:
             - domain: media_player
+fields:
+  media_player:
+    name: Media Player
+    description: The media player to toggle mute state
+    example: media_player.media_room
+    required: true
+    selector:
+      entity:
+        multiple: false
+        filter:
+          - domain: media_player
 sequence:
   - target:
       entity_id: "{{ media_player }}"
