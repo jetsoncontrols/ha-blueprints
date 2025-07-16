@@ -24,7 +24,7 @@ fields:
         filter:
           - domain: media_player
 variables:
-  target_media_player: !input media_player_target
+  media_player_target: !input media_player_target
   my_media_player: >
     {% if otf_media_player | default("") %}
       {{ otf_media_player }}
