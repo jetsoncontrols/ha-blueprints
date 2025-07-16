@@ -1,6 +1,6 @@
 blueprint:
-  name: Motion Light Tutorial
-  description: Turn a light on based on detected motion
+  name: Media Player Mute Toggle
+  description: Toggle the mute state of a media player.
   domain: script
   input:
     media_player:
