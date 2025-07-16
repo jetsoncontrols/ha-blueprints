@@ -17,7 +17,7 @@ fields:
     name: Media Player
     description: The media player to toggle mute state
     example: media_player.media_room
-    required: true
+    required: false
     selector:
       entity:
         multiple: false
