@@ -1,0 +1,21 @@
+blueprint:
+  name: Motion Light Tutorial
+  description: Turn a light on based on detected motion
+  domain: automation
+  input:
+    media_player:
+      name: Media Player
+      description: The media player to toggle mute state
+      example: media_player.media_room
+      required: true
+      selector:
+        entity:
+          multiple: false
+          filter:
+            - domain: media_player
+sequence:
+  - target:
+      entity_id: "{{ media_player }}"
+    action: media_player.volume_mute
+    data:
+      is_volume_muted: "{{ not state_attr(media_player , 'is_volume_muted') }}"
