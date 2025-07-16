@@ -1,4 +1,3 @@
-# https://github.com/SirGoodenough/HA_Blueprints/blob/master/Scripts/play_media_file_script.yaml
 blueprint:
   name: Media Player Mute Toggle
   description: Toggle the mute state of a media player.
@@ -9,33 +8,39 @@ blueprint:
       description: The media player to toggle mute state
       selector:
         entity:
+          domain: media_player
           multiple: false
-          filter:
-            - domain: media_player
+
 fields:
   otf_media_player:
-    name: Media Player
-    description: The media player to toggle mute state
+    name: Media Player (Override)
+    description: Override the selected media player with a runtime one
     example: media_player.media_room
     required: false
     selector:
       entity:
+        domain: media_player
         multiple: false
-        filter:
-          - domain: media_player
+
 variables:
   media_player_target: !input media_player_target
-  my_media_player: >
-    {% if otf_media_player | default("") %}
+  otf_media_player: "{{ otf_media_player | default('', true) }}"
+  my_media_player: >-
+    {% if otf_media_player %}
       {{ otf_media_player }}
-    {% elif media_player_target | default("") %}
+    {% elif media_player_target %}
       {{ media_player_target }}
     {% else %}
-      unknown: No media player entity provided. media_player.mute_toggle.yaml
+      unknown
     {% endif %}
+
 sequence:
-  - target:
+  - service: media_player.volume_mute
+    target:
       entity_id: "{{ my_media_player }}"
-    action: my_media_player.volume_mute
     data:
-      is_volume_muted: "{{ not state_attr(my_media_player , 'is_volume_muted') }}"
+      is_volume_muted: >-
+        {% set muted = state_attr(my_media_player, 'is_volume_muted') %}
+        {{ not muted }}
+
+mode: single
