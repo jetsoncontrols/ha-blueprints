@@ -1,0 +1,64 @@
+blueprint:
+  name: WebOS Screen On/Off Toggle
+  description: >
+    Toggle screen blanking on an LG webOS TV.
+
+    💡 Suggested icon: `mdi:television`
+  domain: script
+  input:
+    webos_entity:
+      name: LG webOS TV
+      description: The LG webOS entity to send the screen on/off command to.
+      selector:
+        entity:
+          domain: media_player
+          integration: webostv
+          multiple: false
+    screen_on:
+      name: Turn Screen On?
+      description: Set to true to turn on the screen, false to turn it off.
+      default: true
+      selector:
+        boolean: {}
+
+fields:
+  otf_webos_entity:
+    name: Runtime WebOS Entity Override
+    description: Optional override of the selected LG TV entity at runtime.
+    required: false
+    selector:
+      entity:
+        domain: media_player
+        integration: webostv
+        multiple: false
+  otf_screen_on:
+    name: Runtime Screen On? Override
+    description: Optional override of the screen on/off boolean.
+    required: false
+    selector:
+      boolean: {}
+
+variables:
+  static_entity: !input webos_entity
+  screen_on_input: !input screen_on
+  otf_webos_entity: "{{ otf_webos_entity | default('', true) }}"
+  otf_screen_on: "{{ otf_screen_on if otf_screen_on is not none else screen_on_input }}"
+  target_entity: >-
+    {% if otf_webos_entity %}
+      {{ otf_webos_entity }}
+    {% else %}
+      {{ static_entity }}
+    {% endif %}
+
+sequence:
+  - service: webostv.command
+    data:
+      entity_id: "{{ target_entity }}"
+      command: >-
+        {% if otf_screen_on %}
+          com.webos.service.tvpower/power/turnOnScreen
+        {% else %}
+          com.webos.service.tvpower/power/turnOffScreen
+        {% endif %}
+
+mode: single
