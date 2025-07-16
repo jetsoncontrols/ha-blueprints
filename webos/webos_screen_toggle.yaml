@@ -1,7 +1,7 @@
 blueprint:
-  name: WebOS Screen On/Off Toggle
+  name: WebOS Screen On/Off
   description: >
-    Toggle screen blanking on an LG webOS TV.
+    Control screen blanking on an LG webOS TV.
 
     💡 Suggested icon: `mdi:television`
   domain: script
