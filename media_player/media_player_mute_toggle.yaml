@@ -6,7 +6,6 @@ blueprint:
     media_player:
       name: Media Player
       description: The media player to toggle mute state
-      required: true
       selector:
         entity:
           multiple: false
