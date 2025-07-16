@@ -1,9 +1,10 @@
+# https://github.com/SirGoodenough/HA_Blueprints/blob/master/Scripts/play_media_file_script.yaml
 blueprint:
   name: Media Player Mute Toggle
   description: Toggle the mute state of a media player.
   domain: script
   input:
-    media_player:
+    media_player_target:
       name: Media Player
       description: The media player to toggle mute state
       selector:
@@ -12,7 +13,7 @@ blueprint:
           filter:
             - domain: media_player
 fields:
-  media_player:
+  otf_media_player:
     name: Media Player
     description: The media player to toggle mute state
     example: media_player.media_room
@@ -22,9 +23,19 @@ fields:
         multiple: false
         filter:
           - domain: media_player
+variables:
+  target_media_player: !input media_player_target
+  my_media_player: >
+    {% if otf_media_player | default("") %}
+      {{ otf_media_player }}
+    {% elif media_player_target | default("") %}
+      {{ media_player_target }}
+    {% else %}
+      unknown: No media player entity provided. media_player.mute_toggle.yaml
+    {% endif %}
 sequence:
   - target:
-      entity_id: "{{ media_player }}"
-    action: media_player.volume_mute
+      entity_id: "{{ my_media_player }}"
+    action: my_media_player.volume_mute
     data:
-      is_volume_muted: "{{ not state_attr(media_player , 'is_volume_muted') }}"
+      is_volume_muted: "{{ not state_attr(my_media_player , 'is_volume_muted') }}"
