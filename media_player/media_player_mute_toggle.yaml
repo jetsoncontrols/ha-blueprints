@@ -1,7 +1,7 @@
 blueprint:
   name: Motion Light Tutorial
   description: Turn a light on based on detected motion
-  domain: automation
+  domain: script
   input:
     media_player:
       name: Media Player
